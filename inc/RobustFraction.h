@@ -9,6 +9,10 @@ class Fraction {
     //TODO: Create the following in the private access modifier:
     //      int numerator
     //      int denominator
+
+        int numerator = 0;
+        int denominator = 0;
+
     int greatestCommonDivisor(int a, int b) {
         if (b == 0)
             return abs(a);
@@ -29,6 +33,18 @@ class Fraction {
     //TODO: Create another constructor that takes two parameters: int numerator & int denominator
     //      set the former equal to numerator and the latter to denominator
 
+        Fraction() {
+                
+        }
+
+        Fraction(int num, int den) {
+
+            numerator = num;
+            denominator = den;
+
+        };
+
+
     //TODO: now overload the << operator. Remember, operator<< is a friend to the class. Pass ostream& out as
     //      the first parameter and Fraction& fraction as the second parameter
     //      
@@ -38,12 +54,38 @@ class Fraction {
     //      If the numerator is less than the denominator then just out the numerator followed by '/' and then the
     //      denominator. Finally return out.
 
+        friend ostream& operator<<(ostream os, Fraction& fraction) {
+
+            if (fraction.denominator == 1) {
+                os << fraction.numerator;
+            }
+            else if (fraction.numerator > fraction.denominator) {
+                os << fraction.numerator / fraction.denominator << " " << fraction.numerator % fraction.denominator << "/" << fraction.denominator;
+            }
+            else {
+                os << fraction.numerator << "/" << fraction.denominator;
+            }
+
+            return os;
+        }
+
+
     friend istream& operator>>(istream& in, Fraction& fraction) {
         //TODO: Now we need to overload operator>>. This is also a friend to the class. Start by prompting
         //      the user to enter a fraction in the format of n/d
         //      You will then need to in the numerator, slash, and then the denominator
         //      If the denominator == 0 then tell the user that the denominator cannot be zero and
         //      set it to 1. Finally, return in
+        char slash;
+
+        in >> fraction.numerator >> slash >> fraction.denominator;
+
+        // Check if the denominator == 0
+        if (fraction.denominator == 0) {
+            cout << "Denominator cannot be zero. Setting denominator to 1." << endl;
+            fraction.denominator = 1;
+        }
+
     }
 
     friend Fraction operator+(Fraction op1, Fraction op2) {
@@ -53,7 +95,17 @@ class Fraction {
         //      numerator = (a * d) + (c * b)
         //      You will then need to make a new fraction object and pass in the new numerator and new
         //      denominator. Call the simplify() function on the new fraction object and then return it.
+
+        int newDenominator = op1.denominator * op2.denominator;
+        int newNumerator = (op1.numerator * op2.denominator) + (op2.numerator * op1.denominator);
+
+        Fraction newFraction(newNumerator, newDenominator);
+        newFraction.simplify();
+
+        return newFraction;
+
     }
+
 
     //TODO: We will now need to overload operator-. The set up will be similar the operator+ function.
     //      The formula will be the following:
@@ -63,6 +115,26 @@ class Fraction {
     //      You will once again need to call a fraction object and pass the new numerator and denominator
     //      Remember to call simplify() and return the new object.
 
+    friend Fraction operator-(Fraction op1, Fraction op2) {
+        //TODO: Now overload operator+. To do this, you need to use the following formula:
+        //      a/b + c/d
+        //      denominator = b * d
+        //      numerator = (a * d) + (c * b)
+        //      You will then need to make a new fraction object and pass in the new numerator and new
+        //      denominator. Call the simplify() function on the new fraction object and then return it.
+
+        int newDenominator = op1.denominator * op2.denominator;
+        int newNumerator = (op1.numerator * op2.denominator) - (op2.numerator * op1.denominator);
+
+        Fraction newFraction(newNumerator, newDenominator);
+        newFraction.simplify();
+
+        return newFraction;
+
+    }
+
+
+
     friend Fraction operator*(Fraction op1, Fraction op2) {
         //TODO: The formula for this one will be the following:
         //      a/b * c/d
@@ -70,6 +142,16 @@ class Fraction {
         //      numerator = a * c
         //      Call a new fraction object and pass the numerator and the denominator
         //      Simplify the fraction and return the object.
+
+        int newDenominator = op1.denominator * op2.denominator;
+        int newNumerator = op1.numerator * op2.numerator;
+
+        Fraction newFraction(newNumerator, newDenominator);
+        newFraction.simplify();
+
+        return newFraction;
+
+
     }
 
     //TODO: We will now overload the operator/. It will look similar to the function above.
@@ -78,6 +160,21 @@ class Fraction {
     //      numerator = a * d
     //      Create a new fraction object and pass the numerator and the denominator and simplify the fraction
     //      return the new object
+
+    friend Fraction operator/(Fraction op1, Fraction op2) {
+        
+
+        int newDenominator = op1.numerator * op1.denominator;
+        int newNumerator = op2.numerator * op2.denominator;
+
+        Fraction newFraction(newNumerator, newDenominator);
+        newFraction.simplify();
+
+        return newFraction;
+
+
+    }
+    
 
     operator double() {
         return static_cast<double>(numerator) / denominator;

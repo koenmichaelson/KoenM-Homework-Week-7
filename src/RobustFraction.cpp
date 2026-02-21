@@ -3,6 +3,7 @@
 using namespace std;
 
 
+
 #ifndef TESTING
 int main(){
     Fraction fraction1;
